@@ -1,92 +1,75 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dinner Split</title>
+  <title>Pitch & Modulation 動作聲音教學</title>
   <link rel="stylesheet" href="styles.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <div class="bg-orb orb-1"></div>
-  <div class="bg-orb orb-2"></div>
-  <div class="bg-grid"></div>
-
-  <main class="wrap">
-    <header class="hero">
-      <div>
-        <p class="eyebrow">Dinner ledger for two</p>
-        <h1>Dinner Split</h1>
-        <p class="subtitle">Track what each of you paid and who needs to pay back whom. Everything stays in your browser.</p>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Net balance</div>
-        <div class="stat-value" id="netBalance">$0.00</div>
-        <div class="stat-note" id="netNote">All settled</div>
-      </div>
+  <main class="app">
+    <header>
+      <h1>動作控制聲音：Pitch 與 Modulation</h1>
+      <p class="subtitle">右手高度控制音高，左手左右擺動控制 modulation。適合中學音樂課堂。</p>
+      <p class="privacy">本活動只會使用相機作即時動作偵測，不會儲存或上載任何影像。</p>
     </header>
 
-    <section class="panel">
-      <h2>Add a dinner</h2>
-      <form id="entryForm" autocomplete="off">
-        <div class="grid">
-          <label>
-            Date
-            <input type="date" id="date" required />
-          </label>
-          <label>
-            Total bill
-            <input type="number" id="total" min="0" step="0.01" placeholder="0.00" required />
-          </label>
-          <label>
-            I paid
-            <input type="number" id="mePaid" min="0" step="0.01" placeholder="0.00" required />
-          </label>
-          <label>
-            She paid
-            <input type="number" id="herPaid" min="0" step="0.01" placeholder="0.00" required />
-          </label>
-          <label class="wide">
-            Notes
-            <input type="text" id="note" placeholder="Where / what" maxlength="80" />
-          </label>
+    <section class="layout">
+      <div class="camera-panel card">
+        <h2>相機畫面</h2>
+        <div class="video-wrap">
+          <video id="video" autoplay playsinline muted></video>
+          <canvas id="overlay"></canvas>
         </div>
-        <div class="actions">
-          <button type="submit">Save dinner</button>
-          <button type="button" class="ghost" id="clearAll">Clear all</button>
+        <p id="cameraStatus" class="status">請先按「Start Camera」。</p>
+      </div>
+
+      <div class="control-panel card">
+        <h2>聲音控制顯示</h2>
+        <div class="meter-block">
+          <label>Pitch: <span id="pitchValue">440 Hz</span></label>
+          <progress id="pitchBar" max="100" value="30"></progress>
         </div>
-        <p class="hint" id="formHint"></p>
-      </form>
+        <div class="meter-block">
+          <label>Mod Speed: <span id="modSpeedValue">0.0 Hz</span></label>
+          <progress id="modSpeedBar" max="100" value="0"></progress>
+        </div>
+        <div class="meter-block">
+          <label>Mod Depth: <span id="modDepthValue">0 cents</span></label>
+          <progress id="modDepthBar" max="100" value="0"></progress>
+        </div>
+        <p class="hint">提示：舉高手，聲音會變高；左手左右擺動越快，聲音顫動越明顯。</p>
+      </div>
     </section>
 
-    <section class="panel">
-      <div class="panel-head">
-        <h2>History</h2>
-        <div class="summary" id="summary"></div>
-      </div>
-      <div id="list" class="list"></div>
-      <p class="empty" id="emptyState">No dinners yet. Add one above.</p>
+    <section class="card buttons">
+      <button id="startCamera">Start Camera</button>
+      <button id="startSound">Start Sound</button>
+      <button id="stopSound">Stop Sound</button>
+      <button id="reset">Reset</button>
+      <label>
+        Change Sound
+        <select id="soundType">
+          <option value="sine">Sine Wave</option>
+          <option value="square">Square Wave</option>
+          <option value="sawtooth">Sawtooth Wave</option>
+          <option value="robot">Robot Sound</option>
+          <option value="space">Space Sound</option>
+        </select>
+      </label>
+    </section>
+
+    <section class="card tips">
+      <h2>教學提示</h2>
+      <ul>
+        <li>請站在鏡頭前，讓雙手都進入畫面。</li>
+        <li>右手越高，Pitch 越高。</li>
+        <li>左手左右擺動越快，Modulation 越快、越深。</li>
+      </ul>
     </section>
   </main>
 
-  <template id="itemTemplate">
-    <article class="item">
-      <div>
-        <div class="item-top">
-          <div class="item-title"></div>
-          <div class="item-total"></div>
-        </div>
-        <div class="item-meta"></div>
-      </div>
-      <div class="item-actions">
-        <div class="item-balance"></div>
-        <button class="ghost small" type="button">Delete</button>
-      </div>
-    </article>
-  </template>
-
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14"></script>
   <script src="app.js"></script>
 </body>
 </html>
